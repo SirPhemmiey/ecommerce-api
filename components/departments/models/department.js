@@ -13,7 +13,7 @@ class Department {
   /**
    *
    *
-   * @param {*} newDepartment
+   * @param {object} newDepartment
    * @returns {object} - Class instance
    * @memberof Department
    */

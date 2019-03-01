@@ -13,7 +13,7 @@ class Products {
   /**
    *
    *
-   * @param {object} - Product data object
+   * @param {object} product
    * @returns {object} - Class instance
    * @memberof Products
    */

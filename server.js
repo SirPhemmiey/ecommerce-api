@@ -3,7 +3,7 @@
 
 require("app-module-path/register");
 
-const Sequelize = require("sequelize");
+const config = require("./config");
 
 const DEFAULT_PORT = 3000;
 //require("app-module-path").addPath(path.join(__dirname, "/lib"));
@@ -14,24 +14,19 @@ const DEFAULT_PORT = 3000;
 
 // server.setup(app, appConfig.setup);
 
-const sequelize = new Sequelize('ecommerce', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql',
-  operatorsAliases: false,
-  pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
+const connection = mysql.createConnection({
+  host: config.dbConfig.host,
+  user: config.dbConfig.user,
+  password: config.dbConfig.password,
+  database: config.dbConfig.database
+});
+
+connection.connect(err => {
+  if (err) {
+      throw new Error(err);
   }
 });
 
-  try {
-      const conn = await sequelize.authenticate();
-  }
-  catch(err) {
-    throw new Error(`Could not connect to database: ${err.toString()}`);
-  }
 
 const app = require("./index");
 
