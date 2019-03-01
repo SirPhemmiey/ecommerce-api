@@ -1,0 +1,35 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "dependencies": {
+    "app-module-path": "^2.2.0",
+    "config": "^3.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-generator": "^4.16.0",
+    "global": "^4.3.2",
+    "healthcheck-middleware": "^1.0.1",
+    "helmet": "^3.15.1",
+    "maikai": "^0.8.1",
+    "metalogger": "^2.2.1",
+    "method-override": "^3.0.0",
+    "mysql": "^2.16.0",
+    "mysql2": "^1.6.5",
+    "promise-mysql": "^3.3.1",
+    "sequelize": "^4.42.1",
+    "spieler": "^1.1.0",
+    "volleyball": "^1.5.1",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.14.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-security": "^1.4.0"
+  }
+}
