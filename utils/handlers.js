@@ -1,6 +1,6 @@
 const log = require("metalogger")();
 
-function setupErrorHandling(app) {
+exports.setupErrorHandling = app => {
   // Custom formatting for error responses.
   app.use((err, req, res, next) => {
     if (err) {
@@ -30,7 +30,7 @@ function setupErrorHandling(app) {
  * @param {Function} func
  * @returns a function
  */
-exports.catchErrors = func => {
+exports.catchAsyncError = func => {
   return (req, res, next) => {
       return func(req, res, next).catch(next);
   }
