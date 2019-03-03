@@ -6,9 +6,9 @@
 
 "use strict";
 
-const log = require("metalogger");
 const { validationResult } = require("express-validator/check");
 const Customers = require("../models/customers");
+const logger = require("config/winston");
 const actions = {},
   model = new Customers();
 
@@ -20,33 +20,34 @@ const actions = {},
  * @returns {JSON}
  */
 actions.registerCustomer = async function(req, res) {
+  let errorMessage;
 
-    let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
 
-    const errors = validationResult(req)
-      .array()
-      .map(error => {
-        errorMessage = error.msg
-      });
- 
-    if (errors.length < 1) {
-        const customers = await model.register(req.body);
-        if (customers) {
-          return res.status(201).json({
-            success: true,
-            message: "Account created successfully"
-          });
-        }
-        res.status(500).json({
+  if (errors.length < 1) {
+    model.register(req.body, function(err, message) {
+      if (err) {
+        return res.status(500).json({
           success: false,
-          message: "An error occured while creating customers."
+          message: err.sqlMessage
         });
-    } else {      
-      res.status(400).json({
-          success: false,
-          message: errorMessage
+      }
+      res.status(201).json({
+        success: true,
+        message: "Account created successfully"
       });
-    }
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
 };
 
 actions.test = async (req, res) => {

@@ -4,79 +4,60 @@
 
 const sql = require("config/database");
 
-const winston = require("winston");
+const appRoot = require("app-root-path");
 
-//Customer object contructor
-// const Customer = (customer) => {
-//     this.name = customer.name;
-//     this.email = customer.email;
-//     this.customer_id = customer.customer_id;
-// };
-
-// Customer.register = (newCustomer, result) => {
-//     sql.query("INSERT INTO `customers` SET ?", newCustomer, (error, response) => {
-//         if (error) {
-
-//         }
-//     })
-// };
-const logger = winston.createLogger({
-    level: "info",
-    format: winston.format.json(),
-    defaultMeta: { service: "user-service" },
-    transports: [
-      // - Write all logs with level 'info' and below to 'conbined.log'
-      new winston.transports.File({ filename: "sql_error.log", level: "error" }),
-      new winston.transports.File({ filename: "sql_combined.log" })
-    ]
-  });
+const logger = require("../../../config/winston");
 
   
 class Customers {
   /**
-   * @description - Model for Customers
-   * 
-   * @param {object} - Customer data object
+   *
+   *
+   * @param {object} newCustomer
+   * @param {func} callback
    * @memberof Customers
-   * 
-   * @returns {object} - Class instance
    */
-  async register(newCustomer) {
-      const {name, email, password, shipping_region_id} = newCustomer;   
-    try {
-        const query =  `INSERT INTO customers (name, email, password, shipping_region_id) VALUES ('${name}', '${email}', '${password}', '${shipping_region_id}')`;
+  register(newCustomer, callback) {
+      const { name, email, password, shipping_region_id } = newCustomer;   
+        const query =  `INSERT INTO customer (name, email, password, shipping_region_id) VALUES ('${name}', '${email}', '${password}', '${shipping_region_id}')`;
           sql.query(query, (err, customer) => {
-            if (!err) {
-                return customer;
+            if (err) {
+                return callback(err, null);
             }
-            console.log("This>>>", err.sqlMessage);
+            return callback(null, customer);
         });
-    }
-    catch(error) {
-        throw new Error("An error occured while creating a new customer", error.sqlMessage);
-    }
   }
 
 /**
  *
  *
- * @param {*} customerId
+ * @param {number} customerId
+ * @param {func} callback
  * @memberof Customers
  */
-async deleteCustomer(customerId) {
-      try {
-        const result = await sql.query(`DELETE * FROM customers WHERE id = ${customerId}`);
-        return result;
-      }
-      catch(error) {
-        return error;
-      }
+ deleteCustomer(customerId, callback) {
+    const query = `DELETE * FROM customers WHERE id = ${customerId}`;
+    sql.query(query, (err, customer) => {
+        if (err) {
+            return callback(err, null);
+        }
+        return callback(null, customer);
+    });
   }
 
-  async editCustomer(customer, customerId) {
+/**
+ *
+ *
+ * @param {object} customer
+ * @param {number} customerId
+ * @param {func} callback
+ * @returns
+ * @memberof Customers
+ */
+editCustomer(customer, customerId, callback) {
       const {} = customer;
       try {
-          const customer = await sql.query(`UPDATE customers SET `);
+          const customer = sql.query(`UPDATE customers SET `);
           return customer;
       }
       catch(error) {

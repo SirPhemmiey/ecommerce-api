@@ -11,7 +11,7 @@ const healthcheck = require("maikai");
 const methodOverride = require("method-override");
 const { errorHandler } = require("./utils/handlers");
 const config = require("./config");
-const winston = require("./config/winston");
+const logger = require("./config/winston");
 
 const customerComponent = require("components/customers");
 
@@ -63,12 +63,22 @@ app.use(expressValidator());
 
 app.use(methodOverride());
 
-app.use(morgan("combined", { stream: winston.stream }));
+app.use(morgan("combined", { stream: logger.stream }));
 
 
 //app.use(serviceRoutes(app));
 
 app.use("/customer", customerComponent);
+
+
+//handle error handling routing
+app.use((req, res) => {
+  //console.log("Ooops!");
+  //logger.info("The endpoint is not found");
+  logger.error(`${500} - The endpoint is not found - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+  res.sendStatus(404);
+});
+
 
 
 //app.use(errorHandler(app));

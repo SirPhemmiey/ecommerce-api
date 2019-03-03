@@ -1,7 +1,7 @@
 
 "use strict";
 
-const sql = require("../../../config/database");
+const sql = require("config/database");
 
 /**
  * @description - Add/Delete/Edit product
@@ -10,52 +10,52 @@ const sql = require("../../../config/database");
  */
 class Products {
 
-  /**
-   *
-   *
-   * @param {object} product
-   * @returns {object} - Class instance
-   * @memberof Products
-   */
-  async addProduct(product) {
+/**
+ *
+ *
+ * @param {*} product
+ * @param {*} callback
+ * @memberof Products
+ */
+ addProduct(product, callback) {
       const { name, description, price, discounted_price } = product;
-      try {
-          const query = `INSERT INTO product (name, description, price, discounted_price) VALUES ('${name}', '${description}', '${price}', '${discounted_price}')`;
-          const result = await sql.query(query);
-          return result;
-      }
-      catch(error) {
-          return error;
-      }
+    const query = `INSERT INTO product (name, description, price, discounted_price) VALUES ('${name}', '${description}', '${price}', '${discounted_price}')`;
+    sql.query(query, (err, product) => {
+        if(err) {
+            return callback(err, null);
+        }
+        return callback(null, product);
+    });
   }
 
- /**
-  *
-  *
-  * @param {number} productId
-  * @returns {object} - Class instance
-  * @memberof Products
-  */
- async deleteProduct(productId) {
-      try {
-        const query = `DELETE FROM product WHERE product_id = ${productId}`;
-        const result = await sql.query(query);
-        return result;
-      }
-      catch(error) {
-          return error;
-      }
+/**
+ *
+ *
+ * @param {number} productId
+ * @param {func} callback
+ * @returns
+ * @memberof Products
+ */
+deleteProduct(productId, callback, callback) {
+      const query = `DELETE * FROM product WHERE id = ${productId}`;
+      sql.query(query, (err, product) => {
+          if (err) {
+              return callback(err, null);
+          }
+          return callback(null, product);
+      });
   }
 
-  /**
-   *
-   *
-   * @param {object} product
-   * @param {number} productId
-   * @returns {object} - Class instance
-   * @memberof Products
-   */
-  async editProduct(product, productId) {
+/**
+ *
+ *
+ * @param {object} product
+ * @param {number} productId
+ * @param {func} callback
+ * @returns
+ * @memberof Products
+ */
+async editProduct(product, productId, callback) {
     const { name, description, price, discounted_price } = product;
     try {
         const query = `UPDATE product SET name = '${name}', description = ${description}, price = ${price}, discounted_price = ${discounted_price}

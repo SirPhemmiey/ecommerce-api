@@ -30,7 +30,7 @@ exports.setupErrorHandling = app => {
  * @param {Function} func
  * @returns a function
  */
-exports.catchAsyncError = func => {
+exports.catchError = func => {
   return (req, res, next) => {
       return func(req, res, next).catch(next);
   }
