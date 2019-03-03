@@ -18,51 +18,56 @@ class Customers {
    * @memberof Customers
    */
   register(newCustomer, callback) {
-      const { name, email, password, shipping_region_id } = newCustomer;   
-        const query =  `INSERT INTO customer (name, email, password, shipping_region_id) VALUES ('${name}', '${email}', '${password}', '${shipping_region_id}')`;
-          sql.query(query, (err, customer) => {
-            if (err) {
-                return callback(err, null);
-            }
-            return callback(null, customer);
-        });
-  }
-
-/**
- *
- *
- * @param {number} customerId
- * @param {func} callback
- * @memberof Customers
- */
- deleteCustomer(customerId, callback) {
-    const query = `DELETE * FROM customers WHERE id = ${customerId}`;
+    const { name, email, password, shipping_region_id } = newCustomer;
+    const params = {
+        name,
+        email,
+        password,
+        shipping_region_id
+    };
+    const query = `INSERT INTO customer (name, email, password, shipping_region_id) VALUES ('${name}', '${email}', '${password}', '${shipping_region_id}')`;
     sql.query(query, (err, customer) => {
-        if (err) {
-            return callback(err, null);
-        }
-        return callback(null, customer);
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, customer);
     });
   }
 
-/**
- *
- *
- * @param {object} customer
- * @param {number} customerId
- * @param {func} callback
- * @returns
- * @memberof Customers
- */
-editCustomer(customer, customerId, callback) {
-      const {} = customer;
-      try {
-          const customer = sql.query(`UPDATE customers SET `);
-          return customer;
+  /**
+   *
+   *
+   * @param {number} customer_id
+   * @param {func} callback
+   * @memberof Customers
+   */
+  deleteCustomer(customer_id, callback) {
+    const query = "DELETE * FROM customers WHERE id = ?";
+    sql.query(query, [customer_id], (err, customer) => {
+      if (err) {
+        return callback(err, null);
       }
-      catch(error) {
-          return error;
-      }
+      return callback(null, customer);
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {object} customer
+   * @param {number} customerId
+   * @param {func} callback
+   * @returns
+   * @memberof Customers
+   */
+  editCustomer(customer, customerId, callback) {
+    const {} = customer;
+    try {
+      const customer = sql.query(`UPDATE customers SET `);
+      return customer;
+    } catch (error) {
+      return error;
+    }
   }
 }
 

@@ -1,12 +1,11 @@
-
 "use strict";
 
 const { check } = require("express-validator/check");
 
 export const validateNewCustomer = [
   check("email")
-  .not()
-  .isEmpty()
+    .not()
+    .isEmpty()
     .exists()
     .withMessage("Email must be provided")
     .isEmail()
@@ -89,7 +88,7 @@ export const validateNewShippingRegion = [
 export const validateLogin = [
   check("username")
     .isAlphanumeric()
-    .withMessage("Username must be alphabetical characters.")
+    .withMessage("Username must be alphabetical and numeric characters.")
     .isLength({ min: 4, max: 20 })
     .withMessage(
       "Username must be at least 5 characters long and not more than 20"
@@ -100,6 +99,23 @@ export const validateLogin = [
     .withMessage("Password must be alphanumeric characters.")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long")
+];
+
+export const validateSearchTerm = [
+  check("search_term")
+    .toString()
+    .not()
+    .isEmpty()
+    .withMessage("Search term must be provided")
+];
+
+export const validateGetProductItem = [
+  check("id")
+    .isNumeric()
+    .withMessage("Product item must be an integer")
+    .not()
+    .isEmpty()
+    .withMessage("Product item is required")
 ];
 
 // export const validateStatus = [

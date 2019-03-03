@@ -14,8 +14,11 @@ const config = require("./config");
 const logger = require("./config/winston");
 
 const customerComponent = require("components/customers");
+const productComponent = require("components/products");
 
 const app = express();
+
+app.use(helmet());
 
 //require("app-module-path").addPath(path.join(__dirname, "/component"));
 
@@ -53,11 +56,9 @@ const app = express();
 //   app.use("/customers", customerComponent);
 // }
 
-app.use(express.json());
+app.use(express.json({ type: "application/json" }));
 
 app.use(express.urlencoded({ extended: true }));
-
-app.use(helmet());
 
 app.use(expressValidator());
 
@@ -69,7 +70,7 @@ app.use(morgan("combined", { stream: logger.stream }));
 //app.use(serviceRoutes(app));
 
 app.use("/customer", customerComponent);
-
+app.use("/product", productComponent);
 
 //handle error handling routing
 app.use((req, res) => {

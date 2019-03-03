@@ -12,14 +12,8 @@ const logger = require("config/winston");
 const actions = {},
   model = new Customers();
 
-/**
- *
- *
- * @param {object} req - HTTP Request
- * @param {object} res - HTTP Response
- * @returns {JSON}
- */
-actions.registerCustomer = async function(req, res) {
+
+actions.registerCustomer = function(req, res) {
   let errorMessage;
 
   const errors = validationResult(req)
