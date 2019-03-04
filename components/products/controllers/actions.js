@@ -223,17 +223,8 @@ actions.searchProducts = (req, res) => {
   }
 };
 
-
-/**
- *
- *
- * @param {object} req - HTTP Request
- * @param {object} res - HTTP Response
- */
-actions.addProduct = (req, res) => {};
-
-actions.editProduct = (req, res) => {};
-
-actions.deleteProduct = (req, res) => {};
+actions.editProduct = (req, res) => {
+  const {} = req.body;
+};
 
 module.exports = actions;

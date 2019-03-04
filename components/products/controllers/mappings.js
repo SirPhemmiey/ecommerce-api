@@ -1,6 +1,6 @@
 /**
  * mappings.js
- * This file is the entry to the controller. 
+ * This file is the entry to the controller.
  * It requires express server and defines the actions to
  * all the product {item} route.
  */
@@ -16,11 +16,14 @@ const actions = require("./actions");
 
 router.get("/getProducts", actions.getProducts);
 router.get("/filterProducts", actions.filterProducts);
-router.get("/searchProducts", validator.validateSearchTerm, actions.searchProducts);
+router.get(
+  "/searchProducts",
+  validator.validateSearchTerm,
+  actions.searchProducts
+);
 router.get("/getProduct/:product_id", actions.getProduct);
 router.get("/inCategory/:category_id", actions.getProductsCategory);
 router.get("/inDepartment/:department_id", actions.getProductsDepartment);
 //router.post("/addProduct", validator.validateNewCustomer, catchError(actions.registerCustomer));
-
 
 module.exports = router;

@@ -1,70 +1,67 @@
-
 "use strict";
 
-const sql = require("../../../config/database");
+const sql = require("config/database");
 
 /**
- * @description - Add/Edit/Delete deparment
+ * @description - Add/Edit/Delete Deparment
  *
  * @class Department
  */
 class Department {
+  /**
+   *
+   *@description - Add a department
+   * @param {object} deparmentData
+   * @param {function} callback
+   * @memberof Department
+   */
+  addDepartment(deparmentData, callback) {
+    const { name, description } = deparmentData;
+    const params = [name, description];
+    const query = `INSERT INTO department (name, description) VALUES (?, ?)`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
 
   /**
    *
-   *
-   * @param {object} newDepartment
-   * @returns {object} - Class instance
+   *@description - Edit a department
+   * @param {object} deparmentData
+   * @param {function} callback
    * @memberof Department
    */
-  async addDepartment(newDepartment) {
-    const { name, description } = newDepartment;
-    try {
-        const query = `INSERT INTO department (name, description) VALUES ('${name}', '${description}')`;
-        const result = await sql.query(query);
-        return result;
-    }
-    catch(error) {
-        return error;
-    }
+  editDepartment(deparmentData, callback) {
+    const { name, description, department_id } = deparmentData;
+    const params = [name, description, department_id];
+    const query = `UPDATE department SET name = ?, description = ? WHERE department_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
   }
 
- /**
-  *
-  *
-  * @param {object} department
-  * @param {number} departmentId
-  * @returns {object} - Class instance
-  * @memberof Department
-  */
- async editDepartment(department, departmentId) {
-      const {name, description} = department;
-      try {
-          const query = `UPDATE department SET name = '${name}', description = '${description}' WHERE department_id = '${departmentId}'`;
-          const result = await sql.query(query);
-          return result;
+  /**
+   *
+   *@description - Delete a department
+   * @param {number} departmentId
+   * @param {function} callback
+   * @memberof Department
+   */
+  deleteDepartment(departmentId, callback) {
+    const params = [departmentId];
+    const query = `DELETE FROM department WHERE department_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
       }
-      catch(error) {
-          return error;
-      }
-  }
-
- /**
-  *
-  *
-  * @param {number} departmentId
-  * @returns {object} - Class instance
-  * @memberof Department
-  */
- async deleteDepartment(departmentId) {
-      try {
-          const query = `DELETE FROM department WHERE department_id = ${departmentId}`;
-          const result = await sql.query(query);
-          return result;
-      }
-      catch(error) {
-          return error;
-      }
+      return callback(null, result);
+    });
   }
 }
 

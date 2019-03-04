@@ -1,5 +1,3 @@
-
-
 "use strict";
 
 const sql = require("config/database");
@@ -8,25 +6,23 @@ const appRoot = require("app-root-path");
 
 const logger = require("../../../config/winston");
 
-  
 class Customers {
   /**
    *
-   *
-   * @param {object} newCustomer
-   * @param {func} callback
+   * @description - Register a new customer
+   * @param {object} data
+   * @param {function} callback
    * @memberof Customers
    */
-  register(newCustomer, callback) {
-    const { name, email, password, shipping_region_id } = newCustomer;
+  register(data, callback) {
+    const { name, email, password } = data;
     const params = {
-        name,
-        email,
-        password,
-        shipping_region_id
+      name,
+      email,
+      password
     };
-    const query = `INSERT INTO customer (name, email, password, shipping_region_id) VALUES ('${name}', '${email}', '${password}', '${shipping_region_id}')`;
-    sql.query(query, (err, customer) => {
+    const query = `INSERT INTO customer (name, email, password) VALUES ('?', '?', '?')`;
+    sql.query(query, params, (err, customer) => {
       if (err) {
         return callback(err, null);
       }
@@ -36,14 +32,16 @@ class Customers {
 
   /**
    *
-   *
-   * @param {number} customer_id
-   * @param {func} callback
+   *@description - Login customer
+   * @param {object} credentials
+   * @param {function} callback
    * @memberof Customers
    */
-  deleteCustomer(customer_id, callback) {
-    const query = "DELETE * FROM customers WHERE id = ?";
-    sql.query(query, [customer_id], (err, customer) => {
+  login(credentials, callback) {
+    const { email, password } = credentials;
+    const params = [email, password];
+    const query = `SELECT email, password FROM customer WHERE email = ? AND password = ?`;
+    sql.query(query, params, (err, customer) => {
       if (err) {
         return callback(err, null);
       }
@@ -53,21 +51,37 @@ class Customers {
 
   /**
    *
-   *
-   * @param {object} customer
-   * @param {number} customerId
-   * @param {func} callback
-   * @returns
+   * @description - Update customer profile
+   * @param {object} data
+   * @param {function} callback
    * @memberof Customers
    */
-  editCustomer(customer, customerId, callback) {
-    const {} = customer;
-    try {
-      const customer = sql.query(`UPDATE customers SET `);
-      return customer;
-    } catch (error) {
-      return error;
-    }
+  updateProfile(data, callback) {
+    const {
+      address_1,
+      city,
+      region,
+      postal_code,
+      country,
+      shipping_region_id,
+      day_phone
+    } = data;
+    const params = [
+      address_1,
+      city,
+      region,
+      postal_code,
+      country,
+      shipping_region_id,
+      day_phone
+    ];
+    const query = `UPDATE customer SET address_1 = ?, city = ?, region = ?, postal_code = ?, country = ?, shipping_region_id = ?, day_phone = ? WHERE customer_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
   }
 }
 

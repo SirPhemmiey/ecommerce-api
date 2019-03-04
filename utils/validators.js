@@ -31,6 +31,53 @@ export const validateNewCustomer = [
     .matches(/\d/)
 ];
 
+export const validateUpdateProfile = [
+  check("address_1")
+    .not()
+    .isEmpty()
+    .withMessage("Please provide an address")
+    .toString(),
+
+  check("city")
+    .not()
+    .isEmpty()
+    .withMessage("Please provide a city")
+    .toString(),
+
+  check("region")
+    .not()
+    .isEmpty()
+    .withMessage("Please provide a region")
+    .toString(),
+
+  check("postal_code")
+    .not()
+    .isEmpty()
+    .withMessage("Please provide a postal code")
+    .isNumeric()
+    .withMessage("Postal code must be a number"),
+
+  check("country")
+    .not()
+    .isEmpty()
+    .withMessage("Please provide a country")
+    .toString(),
+
+  check("shipping_region_id")
+    .not()
+    .isEmpty()
+    .withMessage("Please provide a shipping region")
+    .isNumeric()
+    .withMessage("Shipping region ID must be numeric"),
+
+  check("day_phone")
+    .not()
+    .isEmpty()
+    .withMessage("Please provide a phone number")
+    .isNumeric()
+    .withMessage("Phone number should be numeric")
+];
+
 export const validateNewDepartment = [
   check("name")
     .not()
@@ -86,19 +133,16 @@ export const validateNewShippingRegion = [
 ];
 
 export const validateLogin = [
-  check("username")
-    .isAlphanumeric()
-    .withMessage("Username must be alphabetical and numeric characters.")
-    .isLength({ min: 4, max: 20 })
-    .withMessage(
-      "Username must be at least 5 characters long and not more than 20"
-    ),
+  check("email")
+    .isEmail()
+    .withMessage("Email is not valid")
+    .normalizeEmail(),
 
   check("password")
     .isAlphanumeric()
     .withMessage("Password must be alphanumeric characters.")
-    .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters long")
+    .isLength({ min: 3 })
+    .withMessage("Password must be at least 3 characters long")
 ];
 
 export const validateSearchTerm = [
@@ -116,6 +160,70 @@ export const validateGetProductItem = [
     .not()
     .isEmpty()
     .withMessage("Product item is required")
+];
+
+export const validateNewItem = [
+  check("cart_id")
+    .isNumeric()
+    .withMessage("Cart ID must be an integer")
+    .not()
+    .isEmpty()
+    .withMessage("Cart ID cannot be empty"),
+
+  check("product_id")
+    .isNumeric()
+    .withMessage("Product ID must be an integer")
+    .not()
+    .isEmpty()
+    .withMessage("Product ID cannot be empty"),
+
+  check("attributes")
+    .isString()
+    .withMessage("Attributes should be string")
+    .not()
+    .isEmpty()
+    .withMessage("Attribute cannot be empty"),
+
+  check("quantity")
+    .isNumeric()
+    .withMessage("Quantity must be an integer")
+    .not()
+    .isEmpty()
+    .withMessage("Quantity cannot be empty"),
+
+  check("buy_now")
+    .isString()
+    .withMessage("`Buy now` must be a string")
+    .not()
+    .isEmpty()
+    .withMessage("`Buy now` must be an integer")
+
+  // check("added_on")
+  // .isISO8601()
+  // .withMessage("`Added on` must be a date")
+  // .not()
+  // .isEmpty()
+  // .withMessage("`Added on` must be an integer")
+];
+
+export const validateNewPayment = [
+  check("amount")
+    .not()
+    .isEmpty()
+    .withMessage("Please enter your stripe token")
+    .isNumeric()
+    .withMessage("Amount should be numeric"),
+
+  // check("currency")
+  //   .isCurrency()
+  //   .withMessage("Should be a currency"),
+
+  check("order_id")
+    .not()
+    .isEmpty()
+    .withMessage("Please enter an order ID")
+    .isNumeric()
+    .withMessage("Order ID should be numeric")
 ];
 
 // export const validateStatus = [
