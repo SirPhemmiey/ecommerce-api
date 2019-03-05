@@ -226,6 +226,80 @@ export const validateNewPayment = [
     .withMessage("Order ID should be numeric")
 ];
 
+export const validateEditProduct = [
+  check("name")
+    .isString()
+    .withMessage("Name must be a string"),
+
+  check("description")
+    .isString()
+    .withMessage("Descrition must be a string"),
+
+  check("price")
+    .isNumeric()
+    .withMessage("Price must be an integer"),
+
+  check("discounted_price")
+    .isNumeric()
+    .withMessage("Discounted price must be an integer")
+];
+
+export const validateEditDepartment = [
+  check("name")
+    .isString()
+    .withMessage("Name must be a string"),
+
+  check("description")
+    .isString()
+    .withMessage("Descrition must be a string")
+];
+
+export const validateDeleteDepartment = [
+  check("department_id")
+  .isNumeric()
+  .withMessage("Product department ID must be an integer")
+];
+
+export const validateEditCategory = [
+  check("name")
+    .isString()
+    .withMessage("Name must be a string"),
+
+  check("description")
+    .isString()
+    .withMessage("Description must be a string"),
+
+  check("department_id")
+    .isNumeric()
+    .withMessage("Department ID must be an integer")
+];
+
+export const validateDeleteProduct = [
+  check("product_id")
+  .isNumeric()
+  .withMessage("Product ID must be an integer")
+];
+
+export const validateDeleteCategory = [
+  check("category_id")
+  .isNumeric()
+  .withMessage("Category ID must be an integer")
+];
+
+export const validateAddCategory = [
+  check("name")
+  .isString()
+  .withMessage("Name must be a string"),
+
+  check("description")
+  .isString()
+  .withMessage("Description must be a string"),
+
+  check("department_id")
+  .isNumeric()
+  .withMessage("Department ID must be an integer")
+];
+
 // export const validateStatus = [
 //   check('status')
 //     .isString().withMessage('Status must be alphabetical characters.')

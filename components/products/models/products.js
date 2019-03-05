@@ -139,14 +139,14 @@ class Products {
     });
   }
 
-/**
- *
- *
- * @param {object} productData
- * @param {function} callback
- * @memberof Products
- */
-editProduct(productData, callback) {
+  /**
+   *
+   * @description - Edit product information
+   * @param {object} productData
+   * @param {function} callback
+   * @memberof Products
+   */
+  editProduct(productData, callback) {
     const {
       name,
       description,
@@ -155,7 +155,137 @@ editProduct(productData, callback) {
       product_id
     } = productData;
     const params = [name, description, price, discounted_price, product_id];
-    const query = `UPDATE product SET name = ?, description = ?, price = ?, discounted_price = ?, WHERE product_id = ?`;
+    const query = `UPDATE product SET name = ?, description = ?, price = ?, discounted_price = ? WHERE product_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
+
+  /**
+   *
+   *@description - Delete a product
+   * @param {number} product_id
+   * @param {function} callback
+   * @memberof Products
+   */
+  deleteProduct(product_id, callback) {
+    const params = [product_id];
+    const query = `DELETE FROM product WHERE product_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
+
+  /**
+   *
+   *@description - Add a category
+   * @param {object} categoryData
+   * @param {function} callback
+   * @memberof Products
+   */
+  addCategory(categoryData, callback) {
+    const { name, description, department_id } = categoryData;
+    const params = [name, description, department_id];
+    const query = `INSERT INTO category (name, description, department_id) VALUES (?, ?, ?)`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
+
+  /**
+   *
+   *@description - Edit a category
+   * @param {object} categoryData
+   * @param {function} callback
+   * @memberof Products
+   */
+  editCategory(categoryData, callback) {
+    const { name, description, department_id, category_id } = categoryData;
+    const params = [name, description, department_id, category_id];
+    const query = `UPDATE category SET name = ?, description = ?, department_id = ? WHERE category_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
+
+  /**
+   *
+   *@description - Delete a category
+   * @param {number} categoryId
+   * @param {function} callback
+   * @memberof Products
+   */
+  deleteCategory(category_d, callback) {
+    const params = [category_d];
+    const query = `DELETE FROM category WHERE category_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
+
+  /**
+   *
+   *@description - Add a department
+   * @param {object} departmentData
+   * @param {function} callback
+   * @memberof Products
+   */
+  addDepartment(departmentData, callback) {
+    const { name, description } = departmentData;
+    const params = [name, description];
+    const query = `INSERT INTO department (name, description) VALUES (?, ?)`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
+
+  /**
+   *
+   *@description - Edit a department
+   * @param {object} deparmentData
+   * @param {function} callback
+   * @memberof Products
+   */
+  editDepartment(departmentData, callback) {
+    const { name, description, department_id } = departmentData;
+    const params = [name, description, department_id];
+    const query = `UPDATE department SET name = ?, description = ? WHERE department_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
+
+  /**
+   *
+   *@description - Delete a department
+   * @param {number} departmentId
+   * @param {function} callback
+   * @memberof Products
+   */
+  deleteDepartment(departmentId, callback) {
+    const params = [departmentId];
+    const query = `DELETE FROM department WHERE department_id = ?`;
     sql.query(query, params, (err, result) => {
       if (err) {
         return callback(err, null);

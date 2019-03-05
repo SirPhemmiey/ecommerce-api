@@ -21,9 +21,41 @@ router.get(
   validator.validateSearchTerm,
   actions.searchProducts
 );
-router.get("/getProduct/:product_id", actions.getProduct);
-router.get("/inCategory/:category_id", actions.getProductsCategory);
-router.get("/inDepartment/:department_id", actions.getProductsDepartment);
-//router.post("/addProduct", validator.validateNewCustomer, catchError(actions.registerCustomer));
+router.get("/getProduct/:product_id([0-9]+)", actions.getProduct);
+router.get("/inCategory/:category_id([0-9]+)", actions.getProductsCategory);
+router.get("/inDepartment/:department_id([0-9]+)", actions.getProductsDepartment);
+
+router.put(
+  "/editProduct/:product_id([0-9]+)",
+  validator.validateEditProduct,
+  actions.editProduct
+);
+router.delete(
+  "/deleteProduct/:product_id([0-9]+)",
+  validator.validateDeleteProduct,
+  actions.deleteProduct
+);
+
+router.put(
+  "/editCategory/:category_id([0-9]+)",
+  validator.validateEditCategory,
+  actions.editCategory
+);
+router.delete(
+  "/deleteCategory/:category_id([0-9]+)",
+  validator.validateDeleteCategory,
+  actions.deleteCategory
+);
+
+router.put(
+  "/editDepartment/:department_id([0-9]+)",
+  validator.validateEditCategory,
+  actions.editDepartment
+);
+router.delete(
+  "/deleteDepartment/:department_id([0-9]+)",
+  validator.validateDeleteDepartment,
+  actions.deleteDepartment
+);
 
 module.exports = router;

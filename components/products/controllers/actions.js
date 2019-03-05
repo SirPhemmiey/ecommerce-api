@@ -11,7 +11,7 @@ const logger = require("config/winston");
 const actions = {},
   model = new Product();
 
-  //Function to calculate offset for pagination
+//Function to calculate offset for pagination
 function paginate(page, limit) {
   let _page = parseInt(page, 10); //convert to an integer
   if (isNaN(_page) || _page < 1) {
@@ -78,8 +78,7 @@ actions.getProduct = (req, res) => {
         product
       });
     });
-  }
-  else {
+  } else {
     res.status(500).json({
       success: false,
       message: "Product ID should be an integer"
@@ -140,8 +139,7 @@ actions.getProductsCategory = (req, res) => {
         products
       });
     });
-  }
-  else {
+  } else {
     res.status(500).json({
       success: false,
       message: "Category ID should be an integer"
@@ -175,8 +173,7 @@ actions.getProductsDepartment = (req, res) => {
         products
       });
     });
-  }
-  else {
+  } else {
     res.status(500).json({
       success: false,
       message: "Department ID should be an integer"
@@ -223,8 +220,290 @@ actions.searchProducts = (req, res) => {
   }
 };
 
+//PUT a request to edit product information
 actions.editProduct = (req, res) => {
-  const {} = req.body;
+  const { name, description, price, discounted_price } = req.body;
+  const { product_id } = req.params;
+  let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
+  if (errors.length < 1) {
+    const filterParams = {
+      name,
+      description,
+      price,
+      discounted_price,
+      product_id
+    };
+    model.editProduct(filterParams, (err, result) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          message: err.sqlMessage
+        });
+      } else if (result.affectedRows > 0) {
+        return res.status(200).json({
+          success: true,
+          message: "Product updated successfully"
+        });
+      } else if (result.affectedRows === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "The product with the ID you entered cannot be found"
+        });
+      }
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
+};
+
+//DELETE a product
+actions.deleteProduct = (req, res) => {
+  const { product_id } = req.params;
+  let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
+  if (errors.length < 1) {
+    model.deleteProduct(product_id, (err, result) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          message: err.sqlMessage
+        });
+      } else if (result.affectedRows > 0) {
+        return res.status(200).json({
+          success: true,
+          message: "Product deleted successfully"
+        });
+      } else if (result.affectedRows === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "The product with the ID you entered cannot be found"
+        });
+      }
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
+};
+
+//POST request to add a category
+actions.addCategory = (req, res) => {
+const { name, description, department_id } = req.body;
+let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
+  if (errors.length < 1) {
+    const params = {
+      name, 
+      description,
+      department_id
+    };
+    model.addCategory(params, (err, category) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          message: err.sqlMessage
+        });
+      }
+      return res.status(201).json({
+        success: true,
+        message: "Category added successfully"
+      });
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
+};
+
+//PUT a request to edit category
+actions.editCategory = (req, res) => {
+  const { name, description, department_id } = req.body;
+  const { category_id } = req.params;
+  let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
+  if (errors.length < 1) {
+    const filterParams = {
+      name,
+      description,
+      department_id,
+      category_id
+    };
+    model.editCategory(filterParams, (err, result) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          message: err.sqlMessage
+        });
+      } else if (result.affectedRows > 0) {
+        return res.status(200).json({
+          success: true,
+          message: "Product Category updated successfully"
+        });
+      } else if (result.affectedRows === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "The product category with the ID you entered cannot be found"
+        });
+      }
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
+};
+
+//DELETE a category
+actions.deleteCategory = (req, res) => {
+  const { category_id } = req.params;
+  let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
+  if (errors.length < 1) {
+    model.deleteCategory(category_id, (err, result) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          message: err.sqlMessage
+        });
+      } else if (result.affectedRows > 0) {
+        return res.status(200).json({
+          success: true,
+          message: "Product category deleted successfully"
+        });
+      } else if (result.affectedRows === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "The product category with the ID you entered cannot be found"
+        });
+      }
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
+};
+
+//PUT a request to edit category
+actions.editDepartment = (req, res) => {
+  const { name, description } = req.body;
+  const { department_id } = req.params;
+  let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
+  if (errors.length < 1) {
+    const filterParams = {
+      name,
+      description,
+      department_id
+    };
+    model.editDepartment(filterParams, (err, result) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          message: err.sqlMessage
+        });
+      } else if (result.affectedRows > 0) {
+        return res.status(200).json({
+          success: true,
+          message: "Department updated successfully"
+        });
+      } else if (result.affectedRows === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "The Department with the ID you entered cannot be found"
+        });
+      }
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
+};
+
+//DELETE a department
+actions.deleteDepartment = (req, res) => {
+  const { department_id } = req.params;
+  let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
+  if (errors.length < 1) {
+    model.deleteDepartment(department_id, (err, result) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          message: err.sqlMessage
+        });
+      } else if (result.affectedRows > 0) {
+        return res.status(200).json({
+          success: true,
+          message: "Product department deleted successfully"
+        });
+      } else if (result.affectedRows === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "The product department with the ID you entered cannot be found"
+        });
+      }
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
 };
 
 module.exports = actions;
