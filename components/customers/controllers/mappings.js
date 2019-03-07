@@ -9,6 +9,7 @@
 
 const router = require("express").Router({ mergeParams: true });
 const validator = require("utils/validators");
+const verifyToken = require("middlewares/verifyToken");
 const { catchError } = require("utils/handlers");
 const actions = require("./actions");
 
@@ -18,9 +19,10 @@ router.post(
   actions.registerCustomer
 );
 router.post("/login", validator.validateLogin, actions.login);
-router.post(
+router.put(
   "/updateProfile",
   validator.validateUpdateProfile,
+  verifyToken,
   actions.updateProfile
 );
 

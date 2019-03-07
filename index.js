@@ -85,7 +85,7 @@ app.use((req, res) => {
 
 //handle exceptions
 process.on("uncaughtException", error => {
-  console.error("There was an uncaught error", error);
+  logger.error(error);
   process.exit(1);
 });
 

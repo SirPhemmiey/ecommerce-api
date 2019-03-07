@@ -11,10 +11,9 @@ const router = require("express").Router({ mergeParams: true });
 const validator = require("utils/validators");
 const { catchError } = require("utils/handlers");
 const actions = require("./actions");
+const cache = require("../../../utils/cache");
 
-// photoRouter.get(‘/:id([0-9]+)’, lookupPhoto, function(req, res) {
-
-router.get("/getProducts", actions.getProducts);
+router.get("/getProducts", cache(30), actions.getProducts);
 router.get("/filterProducts", actions.filterProducts);
 router.get(
   "/searchProducts",

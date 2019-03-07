@@ -22,12 +22,12 @@ export const validateNewCustomer = [
 
   check(
     "password",
-    "passwords must be at least 5 chars long and contain one number"
+    "passwords must be at least 3 chars long and contain one number"
   )
     .exists()
     .not()
     .isEmpty()
-    .isLength({ min: 5 })
+    .isLength({ min: 3 })
     .matches(/\d/)
 ];
 
