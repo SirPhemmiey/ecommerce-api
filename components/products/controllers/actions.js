@@ -46,9 +46,11 @@ actions.getProducts = (req, res) => {
   };
   model.getProducts(pageOptions, (err, products, count) => {
     if (err) {
+      console.log({ err });
       logger.error(err.sqlMessage);
       return res.status(500).json({
         success: false,
+        auth: false,
         message: err.sqlMessage
       });
     }
@@ -306,8 +308,8 @@ actions.deleteProduct = (req, res) => {
 
 //POST request to add a category
 actions.addCategory = (req, res) => {
-const { name, description, department_id } = req.body;
-let errorMessage;
+  const { name, description, department_id } = req.body;
+  let errorMessage;
   const errors = validationResult(req)
     .array()
     .map(error => {
@@ -315,7 +317,7 @@ let errorMessage;
     });
   if (errors.length < 1) {
     const params = {
-      name, 
+      name,
       description,
       department_id
     };
@@ -373,7 +375,8 @@ actions.editCategory = (req, res) => {
       } else if (result.affectedRows === 0) {
         return res.status(200).json({
           success: false,
-          message: "The product category with the ID you entered cannot be found"
+          message:
+            "The product category with the ID you entered cannot be found"
         });
       }
     });
@@ -411,7 +414,8 @@ actions.deleteCategory = (req, res) => {
       } else if (result.affectedRows === 0) {
         return res.status(200).json({
           success: false,
-          message: "The product category with the ID you entered cannot be found"
+          message:
+            "The product category with the ID you entered cannot be found"
         });
       }
     });
@@ -493,7 +497,8 @@ actions.deleteDepartment = (req, res) => {
       } else if (result.affectedRows === 0) {
         return res.status(200).json({
           success: false,
-          message: "The product department with the ID you entered cannot be found"
+          message:
+            "The product department with the ID you entered cannot be found"
         });
       }
     });

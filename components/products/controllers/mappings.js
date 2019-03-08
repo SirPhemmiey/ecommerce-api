@@ -11,9 +11,9 @@ const router = require("express").Router({ mergeParams: true });
 const validator = require("utils/validators");
 const { catchError } = require("utils/handlers");
 const actions = require("./actions");
-const cache = require("../../../utils/cache");
+const cache = require("utils/cache");
 
-router.get("/getProducts", cache(30), actions.getProducts);
+router.get("/getProducts", cache, actions.getProducts);
 router.get("/filterProducts", actions.filterProducts);
 router.get(
   "/searchProducts",
