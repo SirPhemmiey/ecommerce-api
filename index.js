@@ -12,12 +12,15 @@ const expressValidator = require("express-validator");
 const healthcheck = require("maikai");
 const cors = require("cors");
 const methodOverride = require("method-override");
-const { errorHandler } = require("./utils/handlers");
+const { productionErrors, developmentErrors } = require("./utils/handlers");
 const config = require("./config");
 const responseTime = require('response-time');
 const logger = require("./config/winston");
 const compression = require("compression");
 const nodemailer = require("nodemailer");
+const rateLimit = require("express-rate-limit"); //Pacakage to limit repeated requests to public APIs and/or endpoints.
+const hpkp = require("hpkp");
+const ninetyDaysInSeconds = 7776000;
 
 const customerComponent = require("components/customers");
 const productComponent = require("components/products");
@@ -27,6 +30,32 @@ const paymentComponent = require("components/payments");
 const app = express();
 
 app.use(helmet());
+app.use(hpkp({
+  maxAge: ninetyDaysInSeconds,
+  sha256s: ['AbCdEf123=', 'ZyXwVu456='],
+  // Set the header based on a condition.
+  // This is optional.
+  setIf: function (req, res) {
+    return req.secure
+  }
+}));
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+  }
+}));
+app.use(helmet.xssFilter());
+app.use(helmet.expectCt({
+  enforce: true,
+  maxAge: 123
+}));
+app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
+const limiter = new rateLimit({
+  windowMs: 15*60*1000, // 15 minutes 
+  max: 100, // limit each IP to 100 requests per windowMs 
+  delayMs: 0 // disable delaying - full speed until the max limit is reached 
+});
+app.use(limiter);
 
 //require("app-module-path").addPath(path.join(__dirname, "/component"));
 
@@ -74,6 +103,11 @@ app.use(expressValidator()); //Expose a bunch of validation methods
 app.use(methodOverride());
 app.use(morgan("combined", { stream: logger.stream }));
 
+app.use(developmentErrors);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(productionErrors);
+}
 
 //app.use(serviceRoutes(app));
 
@@ -87,8 +121,6 @@ app.use((req, res) => {
   logger.error(`${500} - The endpoint is not found - ${req.originalUrl} - ${req.method} - ${req.ip}`);
   res.sendStatus(404);
 });
-
-//app.use(errorHandler(app));
 
 // const transport = nodemailer.createTransport('SMTP', { // [1]
 //   service: "Gmail",

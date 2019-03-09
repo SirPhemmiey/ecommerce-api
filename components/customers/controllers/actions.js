@@ -82,7 +82,7 @@ actions.login = (req, res) => {
         return res.status(500).json({
           success: false,
           auth: false,
-          message: "Email does not exist"
+          message: "Invalid Email or Password"
         });
       }
       const passwordIsValid = await bcrypt.compare(
@@ -94,7 +94,7 @@ actions.login = (req, res) => {
           auth: false,
           success: false,
           token: null,
-          message: "Invalid password"
+          message: "Invalid Email or Password"
         });
       const token = jwt.sign({ id: customer[0].customer_id, email: customer[0].email }, config.jwt.secret, {
         expiresIn: 86400 // expires in 24 hours
@@ -156,5 +156,6 @@ actions.updateProfile = (req, res) => {
     }
   });
 };
+
 
 module.exports = actions;
