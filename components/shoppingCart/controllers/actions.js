@@ -5,6 +5,7 @@
  */
 
 "use strict";
+
 const { validationResult } = require("express-validator/check");
 const ShoppingCart = require("../models/shoppingcart");
 const logger = require("config/winston");
@@ -24,6 +25,7 @@ actions.addToCart = (req, res) => {
   if (errors.length < 1) {
     model.addToCart(req.body, function(err, result) {
       if (err) {
+        logger.error(err.sqlMessage);
         return res.status(500).json({
           success: false,
           message: err.sqlMessage

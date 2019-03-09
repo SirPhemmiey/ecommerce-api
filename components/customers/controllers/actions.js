@@ -28,6 +28,7 @@ actions.registerCustomer = async (req, res) => {
     req.body.password = hashedPassword;
     model.register(req.body, function(err, customer, isFound) {
       if (err) {
+        logger.error(err.sqlMessage);
         return res.status(500).json({
           success: false,
           auth: false,
@@ -71,6 +72,7 @@ actions.login = (req, res) => {
       });
     if (errors.length < 1) {
       if (err) {
+        logger.error(err.sqlMessage);
         return res.status(500).json({
           success: false,
           auth: false,
@@ -132,6 +134,7 @@ actions.updateProfile = (req, res) => {
       req.body.customer_id = decoded.id;
       model.updateProfile(req.body, function(err, message) {
         if (err) {
+          logger.error(err.sqlMessage);
           return res.status(500).json({
             success: false,
             auth: false,

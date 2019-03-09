@@ -7,6 +7,8 @@
 
 require("app-module-path/register");
 
+require("newrelic");
+
 const config = require("./config");
 
 const logger = require("config/winston");

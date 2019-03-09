@@ -14,15 +14,16 @@ const actions = require("./actions");
 const cache = require("utils/cache");
 
 router.get("/getProducts", cache, actions.getProducts);
-router.get("/filterProducts", actions.filterProducts);
+router.get("/filterProducts", cache, actions.filterProducts);
 router.get(
   "/searchProducts",
+  cache,
   validator.validateSearchTerm,
   actions.searchProducts
 );
-router.get("/getProduct/:product_id([0-9]+)", actions.getProduct);
-router.get("/inCategory/:category_id([0-9]+)", actions.getProductsCategory);
-router.get("/inDepartment/:department_id([0-9]+)", actions.getProductsDepartment);
+router.get("/getProduct/:product_id([0-9]+)", cache, actions.getProduct);
+router.get("/inCategory/:category_id([0-9]+)", cache, actions.getProductsCategory);
+router.get("/inDepartment/:department_id([0-9]+)", cache, actions.getProductsDepartment);
 
 router.put(
   "/editProduct/:product_id([0-9]+)",

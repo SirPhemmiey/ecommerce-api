@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.13.0/libexec/bin/yarn.js add flat-cache
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.13.0/libexec/bin/yarn.js add nodemailer
 
 PATH: 
   /Users/sirphemmiey/google-cloud-sdk/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/local/lib:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/sirphemmiey/Library/Android/sdk/emulator:/Users/sirphemmiey/Library/Android/sdk/tools:/Users/sirphemmiey/Library/Android/sdk/tools/bin:/Users/sirphemmiey/Library/Android/sdk/platform-tools
@@ -14,8 +14,8 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: read ECONNRESET
-      at TLSWrap.onStreamRead (internal/stream_base_commons.js:111:27)
+  Error: getaddrinfo ENOTFOUND registry.yarnpkg.com registry.yarnpkg.com:443
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:57:26)
 
 npm manifest: 
   {
@@ -34,22 +34,24 @@ npm manifest:
       "app-module-path": "^2.2.0",
       "app-root-path": "^2.1.0",
       "bcryptjs": "^2.4.3",
+      "compression": "^1.7.3",
       "config": "^3.0.1",
       "cors": "^2.8.5",
       "express": "^4.16.4",
       "express-generator": "^4.16.0",
       "express-validator": "^5.3.1",
+      "flat-cache": "^2.0.1",
       "global": "^4.3.2",
       "healthcheck-middleware": "^1.0.1",
       "helmet": "^3.15.1",
       "jsonwebtoken": "^8.5.0",
       "maikai": "^0.8.1",
-      "memory-cache": "^0.2.0",
       "metalogger": "^2.2.1",
       "method-override": "^3.0.0",
       "morgan": "^1.9.1",
       "mysql": "^2.16.0",
       "promise-mysql": "^3.3.1",
+      "response-time": "^2.3.2",
       "stripe": "^6.25.1",
       "winston": "^3.2.1"
     },
@@ -1140,6 +1142,26 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
     integrity sha1-E3kY1teCg/ffemt8WmPhQOaUJeY=
   
+  compressible@~2.0.14:
+    version "2.0.16"
+    resolved "https://registry.yarnpkg.com/compressible/-/compressible-2.0.16.tgz#a49bf9858f3821b64ce1be0296afc7380466a77f"
+    integrity sha512-JQfEOdnI7dASwCuSPWIeVYwc/zMsu/+tRhoUvEfXz2gxOA2DNjmG5vhtFdBlhWPPGo+RdT9S3tgc/uH5qgDiiA==
+    dependencies:
+      mime-db ">= 1.38.0 < 2"
+  
+  compression@^1.7.3:
+    version "1.7.3"
+    resolved "https://registry.yarnpkg.com/compression/-/compression-1.7.3.tgz#27e0e176aaf260f7f2c2813c3e440adb9f1993db"
+    integrity sha512-HSjyBG5N1Nnz7tF2+O7A9XUhyjru71/fwgNb7oIsEVHR0WShfs2tIS/EySLgiTe98aOK18YDlMXpzjCXY/n9mg==
+    dependencies:
+      accepts "~1.3.5"
+      bytes "3.0.0"
+      compressible "~2.0.14"
+      debug "2.6.9"
+      on-headers "~1.0.1"
+      safe-buffer "5.1.2"
+      vary "~1.1.2"
+  
   concat-map@0.0.1:
     version "0.0.1"
     resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
@@ -1315,7 +1337,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/depd/-/depd-2.0.0.tgz#b696163cc757560d09cf22cc8fad1571b79e76df"
     integrity sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==
   
-  depd@~1.1.2:
+  depd@~1.1.0, depd@~1.1.2:
     version "1.1.2"
     resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
     integrity sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
@@ -2670,11 +2692,6 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
     integrity sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=
   
-  memory-cache@^0.2.0:
-    version "0.2.0"
-    resolved "https://registry.yarnpkg.com/memory-cache/-/memory-cache-0.2.0.tgz#7890b01d52c00c8ebc9d533e1f8eb17e3034871a"
-    integrity sha1-eJCwHVLADI68nVM+H46xfjA0hxo=
-  
   merge-descriptors@1.0.1:
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
@@ -2744,7 +2761,7 @@ Lockfile:
       snapdragon "^0.8.1"
       to-regex "^3.0.2"
   
-  mime-db@~1.38.0:
+  "mime-db@>= 1.38.0 < 2", mime-db@~1.38.0:
     version "1.38.0"
     resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.38.0.tgz#1a2aab16da9eb167b49c6e4df2d9c68d63d8e2ad"
     integrity sha512-bqVioMFFzc2awcdJZIzR3HjZFX20QhilVS7hytkKrv7xFAn8bM1gzc/FOX2awLISvWe0PV8ptFKcon+wZ5qYkg==
@@ -3477,6 +3494,14 @@ Lockfile:
     integrity sha512-3sUr9aq5OfSg2S9pNtPA9hL1FVEAjvfOC4leW0SNf/mpnaakz2a9femSd6LqAww2RaFctwyf1lCqnTHuF1rxDg==
     dependencies:
       path-parse "^1.0.6"
+  
+  response-time@^2.3.2:
+    version "2.3.2"
+    resolved "https://registry.yarnpkg.com/response-time/-/response-time-2.3.2.tgz#ffa71bab952d62f7c1d49b7434355fbc68dffc5a"
+    integrity sha1-/6cbq5UtYvfB1Jt0NDVfvGjf/Fo=
+    dependencies:
+      depd "~1.1.0"
+      on-headers "~1.0.1"
   
   restore-cursor@^2.0.0:
     version "2.0.0"

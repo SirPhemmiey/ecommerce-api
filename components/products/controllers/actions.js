@@ -46,7 +46,6 @@ actions.getProducts = (req, res) => {
   };
   model.getProducts(pageOptions, (err, products, count) => {
     if (err) {
-      console.log({ err });
       logger.error(err.sqlMessage);
       return res.status(500).json({
         success: false,
