@@ -192,11 +192,11 @@ export const validateNewItem = [
     .withMessage("Quantity cannot be empty"),
 
   check("buy_now")
-    .isString()
-    .withMessage("`Buy now` must be a string")
+    .isNumeric()
+    .withMessage("`Buy now` must be an integer")
     .not()
     .isEmpty()
-    .withMessage("`Buy now` must be an integer")
+    .withMessage("`Buy now` field is required")
 
   // check("added_on")
   // .isISO8601()

@@ -22,7 +22,7 @@ exports.setupErrorHandling = app => {
     }
     next();
   });
-}
+};
 
 /**
  *
@@ -32,8 +32,8 @@ exports.setupErrorHandling = app => {
  */
 exports.catchError = func => {
   return (req, res, next) => {
-      return func(req, res, next).catch(next);
-  }
+    return func(req, res, next).catch(next);
+  };
 };
 
 /**
@@ -45,22 +45,25 @@ exports.catchError = func => {
  * @param {object} next
  */
 exports.developmentErrors = (err, req, res, next) => {
-  err.stack = err.stack || '';
+  err.stack = err.stack || "";
   const errorDetails = {
     message: err.message,
     status: err.status,
-    stackHighlighted: err.stack.replace(/[a-z_-\d]+.js:\d+:\d+/gi, '<mark>$&</mark>')
+    stackHighlighted: err.stack.replace(
+      /[a-z_-\d]+.js:\d+:\d+/gi,
+      "<mark>$&</mark>"
+    )
   };
   res.status(err.status || 500);
   res.format({
     // Based on the `Accept` http header
-    'text/json': () => {
+    "text/json": () => {
       res.json({
         message: err.message,
         error: {}
       });
     }, // Form Submit, Reload the page
-    'application/json': () => res.json(errorDetails) // Ajax call, send JSON back
+    "application/json": () => res.json(errorDetails) // Ajax call, send JSON back
   });
 };
 
@@ -70,14 +73,14 @@ exports.developmentErrors = (err, req, res, next) => {
  * @param {object} err - Error Object
  * @param {object} req - HTTP Request
  * @param {object} res - HTTP Response
- * @param {object} next 
+ * @param {object} next
  */
 exports.productionErrors = (err, req, res, next) => {
-res.status(err.status || 500);
-res.json({
-  message: err.message,
-  error: {}
-});
+  res.status(err.status || 500);
+  res.json({
+    message: err.message,
+    error: {}
+  });
 };
 
 //module.exports = setupErrorHandling;

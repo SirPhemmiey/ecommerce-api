@@ -14,7 +14,7 @@ const cors = require("cors");
 const methodOverride = require("method-override");
 const { productionErrors, developmentErrors } = require("./utils/handlers");
 const config = require("./config");
-const responseTime = require('response-time');
+const responseTime = require("response-time");
 const logger = require("./config/winston");
 const compression = require("compression");
 const nodemailer = require("nodemailer");
@@ -28,34 +28,6 @@ const shoppingCartComponent = require("components/shoppingCart");
 const paymentComponent = require("components/payments");
 
 const app = express();
-
-app.use(helmet());
-app.use(hpkp({
-  maxAge: ninetyDaysInSeconds,
-  sha256s: ['AbCdEf123=', 'ZyXwVu456='],
-  // Set the header based on a condition.
-  // This is optional.
-  setIf: function (req, res) {
-    return req.secure
-  }
-}));
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-  }
-}));
-app.use(helmet.xssFilter());
-app.use(helmet.expectCt({
-  enforce: true,
-  maxAge: 123
-}));
-app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
-const limiter = new rateLimit({
-  windowMs: 15*60*1000, // 15 minutes 
-  max: 100, // limit each IP to 100 requests per windowMs 
-  delayMs: 0 // disable delaying - full speed until the max limit is reached 
-});
-app.use(limiter);
 
 //require("app-module-path").addPath(path.join(__dirname, "/component"));
 
@@ -93,34 +65,92 @@ app.use(limiter);
 //   app.use("/customers", customerComponent);
 // }
 
-
-app.use(compression()); //Compress all responses
-app.use(responseTime()); //Create a middleware that adds a X-Response-Time header to responses.
-app.use(cors());
-app.use(express.json({ type: "application/json" }));
-app.use(express.urlencoded({ extended: true }));
-app.use(expressValidator()); //Expose a bunch of validation methods
-app.use(methodOverride());
-app.use(morgan("combined", { stream: logger.stream }));
-
-app.use(developmentErrors);
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(productionErrors);
+//A function to handle security of the application
+function secure(app) {
+  app.use(helmet());
+  app.use(
+    hpkp({
+      maxAge: ninetyDaysInSeconds,
+      sha256s: ["AbCdEf123=", "ZyXwVu456="],
+      // Set the header based on a condition.
+      setIf: function(req, res) {
+        return req.secure;
+      }
+    })
+  );
+  app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"]
+      }
+    })
+  );
+  app.use(helmet.xssFilter());
+  app.use(
+    helmet.expectCt({
+      enforce: true,
+      maxAge: 123
+    })
+  );
+  app.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
+  const limiter = new rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    delayMs: 0 // disable delaying - full speed until the max limit is reached
+  });
+  app.use(limiter);
 }
 
-//app.use(serviceRoutes(app));
+function mainAppServices(app) {
+  
+  //Invoke the secure function
+  secure(app);
 
-app.use("/customer", customerComponent);
-app.use("/product", productComponent);
-app.use("/shoppingcart", shoppingCartComponent);
-app.use("/payment", paymentComponent);
+  //Set response Content-Type
+  app.use((req, res, next) => {
+    res.setHeader("Content-Type", "application/json");
+    next();
+  });
 
-//handle error handling routing
-app.use((req, res) => {
-  logger.error(`${500} - The endpoint is not found - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-  res.sendStatus(404);
-});
+  app.use(compression()); //Compress all responses
+  app.use(responseTime()); //Create a middleware that adds a X-Response-Time header to responses.
+  app.use(cors());
+  app.use(express.json({ type: "application/json" }));
+  app.use(express.urlencoded({ extended: true }));
+  app.use(expressValidator()); //Expose a bunch of validation methods
+  app.use(methodOverride());
+  app.use(morgan("combined", { stream: logger.stream }));
+
+  app.use(developmentErrors);
+
+  if (process.env.NODE_ENV === "production") {
+    app.use(productionErrors);
+  }
+
+  //Load up the app routes
+  serviceRoutes(app);
+
+  //handle error handling routing
+  app.use((req, res) => {
+    logger.error(
+      `${500} - The endpoint is not found - ${req.originalUrl} - ${
+        req.method
+      } - ${req.ip}`
+    );
+    res.sendStatus(404);
+  });
+}
+
+//Function to handle the app routes
+function serviceRoutes(app) {
+  app.use("/customer", customerComponent);
+  app.use("/product", productComponent);
+  app.use("/shoppingcart", shoppingCartComponent);
+  app.use("/payment", paymentComponent);
+}
+
+//Invoke the main function
+mainAppServices(app);
 
 // const transport = nodemailer.createTransport('SMTP', { // [1]
 //   service: "Gmail",
@@ -129,15 +159,13 @@ app.use((req, res) => {
 //     pass: "Algorithm212"
 //   }
 // });
-// const transport = nodemailer.createTransport("smtps://oluwafemiakinde@gmail.com:"+encodeURIComponent("Algorithm") + "@smtp.gmail.com:465"); 
-
+// const transport = nodemailer.createTransport("smtps://oluwafemiakinde@gmail.com:"+encodeURIComponent("Algorithm") + "@smtp.gmail.com:465");
 
 //Overide the behaviour of Node process terminating on any uncaught exception (explicit/implicit).
 // process.on("uncaughtException", error => {
 //   logger.error(error);
 //   process.exit(1);
 // });
-
 
 // transport.sendMail({
 //   from: 'alerts@mycompany.com',
@@ -150,8 +178,8 @@ app.use((req, res) => {
 // })
 
 //Get notified of anything that is taking down your Node process while in production
-if (process.env.NODE_ENV === 'production') {
-  process.on('uncaughtException', err => {
+if (process.env.NODE_ENV === "production") {
+  process.on("uncaughtException", err => {
     logger.error(err.stack);
     // transport.sendMail({
     //   from: 'alerts@mycompany.com',
@@ -162,16 +190,19 @@ if (process.env.NODE_ENV === 'production') {
     //    if (err) logger.error(err);
     //    process.exit(1)
     // })
-    transport.sendMail({
-      from: 'alerts@mycompany.com',
-      to: 'sirphemmiey@gmail.com',
-      subject: "Subject",
-      text: "text"
-    }, function (err) {
-       if (err) logger.error(err);
-       process.exit(1)
-    })
-  })
+    transport.sendMail(
+      {
+        from: "alerts@mycompany.com",
+        to: "sirphemmiey@gmail.com",
+        subject: "Subject",
+        text: "text"
+      },
+      function(err) {
+        if (err) logger.error(err);
+        process.exit(1);
+      }
+    );
+  });
 }
 
 module.exports = app;
