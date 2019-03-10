@@ -9,7 +9,7 @@
 
 const router = require("express").Router({ mergeParams: true });
 const validator = require("utils/validators");
-const verifyToken = require("middlewares/verifyToken");
+const checkAndVerifyToken = require("middlewares/checkAndVerifyToken");
 const { catchError } = require("utils/handlers");
 const actions = require("./actions");
 
@@ -22,8 +22,10 @@ router.post("/login", validator.validateLogin, actions.login);
 router.put(
   "/updateProfile",
   validator.validateUpdateProfile,
-  verifyToken,
+  checkAndVerifyToken,
   actions.updateProfile
 );
+
+ router.post("/token_", validator.validateLogin, actions.getToken);
 
 module.exports = router;

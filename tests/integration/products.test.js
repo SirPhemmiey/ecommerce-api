@@ -19,7 +19,7 @@ describe("Product", () => {
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);
-          expect(res.body.success).to.equal(true);
+          expect(res.body.success).to.be.true;
           expect(res.body.count).to.equal(10);
           expect(res.body.products).to.be.an("array");
           return done();
@@ -37,7 +37,7 @@ describe("Product", () => {
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-        expect(res.body.success).to.equal(true);
+        expect(res.body.success).to.be.true;
         expect(res.body.count).to.equal(10);
         expect(res.body.products).to.be.an("array");
         return done();
@@ -55,7 +55,7 @@ describe("Product", () => {
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);
-          expect(res.body.success).to.equal(true);
+          expect(res.body.success).to.be.true;
           expect(res.body.product).to.be.an("array");
           return done();
         });
@@ -81,7 +81,7 @@ describe("Product", () => {
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-        expect(res.body.success).to.equal(true);
+        expect(res.body.success).to.be.true;
         expect(res.body.products).to.be.an("array");
         return done();
       });
@@ -97,7 +97,7 @@ describe("Product", () => {
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-        expect(res.body.success).to.equal(true);
+        expect(res.body.success).to.be.true;
         expect(res.body.products).to.be.an("array");
         return done();
       });
@@ -114,7 +114,7 @@ describe("Product", () => {
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-        expect(res.body.success).to.equal(true);
+        expect(res.body.success).to.be.true;
         expect(res.body.products).to.be.an("array");
         return done();
       });

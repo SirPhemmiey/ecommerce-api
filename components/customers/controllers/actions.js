@@ -37,18 +37,11 @@ actions.registerCustomer = async (req, res) => {
       } else if (!isFound) {
         return res.status(409).json({
           success: false,
-          auth: false,
           message: "The email is already registered. Please choose another one."
         });
       }
-      // All is fine, create a token
-      const token = jwt.sign({ id: customer.customer_id }, config.jwt.secret, {
-        expiresIn: 86400 // expires in 24 hours
-      });
       res.status(201).json({
         success: true,
-        auth: true,
-        token,
         message: "Account created successfully"
       });
     });
@@ -96,9 +89,13 @@ actions.login = (req, res) => {
           token: null,
           message: "Invalid Email or Password"
         });
-      const token = jwt.sign({ id: customer[0].customer_id, email: customer[0].email }, config.jwt.secret, {
-        expiresIn: 86400 // expires in 24 hours
-      });
+      const token = jwt.sign(
+        { id: customer[0].customer_id, email: customer[0].email },
+        config.jwt.secret,
+        {
+          expiresIn: 86400 // expires in 24 hours
+        }
+      );
       res.status(200).json({
         success: true,
         auth: true,
@@ -116,13 +113,6 @@ actions.login = (req, res) => {
 };
 
 actions.updateProfile = (req, res) => {
-  //Verify the token and get the customer's ID from it
-  jwt.verify(req.token, config.jwt.secret, function(err, decoded) {
-    if (err) {
-      return res
-        .status(500)
-        .json({ auth: false, token: null, message: err.message });
-    }
     let errorMessage;
     const errors = validationResult(req)
       .array()
@@ -131,7 +121,7 @@ actions.updateProfile = (req, res) => {
       });
 
     if (errors.length < 1) {
-      req.body.customer_id = decoded.id;
+      req.body.customer_id = req.decoded.id;
       model.updateProfile(req.body, function(err, message) {
         if (err) {
           logger.error(err.sqlMessage);
@@ -154,8 +144,48 @@ actions.updateProfile = (req, res) => {
       });
       logger.error(errorMessage);
     }
-  });
 };
 
+actions.getToken = (req, res) => {
+  model.checkEmail(req.body.email, async function(err, customer) {
+    if (err) {
+      logger.error(err.sqlMessage);
+      return res.status(500).json({
+        success: false,
+        auth: false,
+        message: err.sqlMessage
+      });
+    } else if (customer.length === 0 || customer.length < 1) {
+      return res.status(500).json({
+        success: false,
+        auth: false,
+        message: "Invalid Email or Password"
+      });
+    }
+    const passwordIsValid = await bcrypt.compare(
+      req.body.password,
+      customer[0].password
+    );
+    if (!passwordIsValid)
+      return res.status(401).json({
+        auth: false,
+        success: false,
+        token: null,
+        message: "Invalid Email or Password"
+      });
+    const token = jwt.sign(
+      { id: customer[0].customer_id, email: customer[0].email },
+      config.jwt.secret,
+      {
+        expiresIn: 86400 // expires in 24 hours
+      }
+    );
+    res.status(200).json({
+      success: true,
+      auth: true,
+      token,
+    });
+  });
+};
 
 module.exports = actions;

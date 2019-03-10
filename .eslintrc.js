@@ -4,9 +4,11 @@ module.exports = {
         "plugin:security/recommended"
     ],
     "rules": {
-    "quotes": [2, "double", "avoidEscape"]
+    "quotes": [2, "double", "avoidEscape"],
+    "mocha/no-exclusive-tests": "error"
     },
     "plugins": [
-        "security"
+        "security",
+        "mocha"
     ]
 };

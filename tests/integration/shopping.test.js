@@ -10,6 +10,7 @@ const { expect } = require("chai");
 
 
 describe("Shopping Cart", () => {
+
   //POST an item to the shopping cart
   describe("POST Product Item", () => {
     it("Should add an item to the cart", done => {
@@ -27,7 +28,7 @@ describe("Shopping Cart", () => {
         .expect(201)
         .end((err, res) => {
           if (err) return done(err);
-          expect(res.body.success).to.equal(true);
+          expect(res.body.success).to.be.true;
           expect(res.body.message).to.equal("Item added successfully");
           return done();
         });

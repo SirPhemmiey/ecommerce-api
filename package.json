@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "nodemon --exec babel-node server.js",
-    "test": "cross-env NODE_ENV=test nyc  mocha tests/integration/shopping.test.js --opts tests/mocha.opts",
+    "test": "cross-env NODE_ENV=test nyc mocha tests/integration/* --opts tests/mocha.opts",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
@@ -53,7 +53,9 @@
     "eslint": "^5.14.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-mocha": "^5.3.0",
     "eslint-plugin-security": "^1.4.0",
+    "istanbul": "^0.4.5",
     "mocha": "^6.0.2",
     "nyc": "^13.3.0",
     "supertest": "^4.0.0"

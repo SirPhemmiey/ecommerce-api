@@ -6,19 +6,18 @@
 
 "use strict";
 
-//const Customers = require("../models/payments");
 const { validationResult } = require("express-validator/check");
+const Payment = require("../models/payments");
 const logger = require("config/winston");
 const config = require("../../../config");
 const stripe = require("stripe")(config.payment.secret_key);
-const actions = {};
-//   model = new Customers();
+const actions = {},
+  model = new Payment();
 
 actions.makePayment = (req, res) => {
   let errorMessage;
-  const { amount, currency, order_id } = req.body;
-  let currency_ = currency || "usd";
-
+  const { amount, currency } = req.body;
+  let currency_ = currency || "USD";
   const errors = validationResult(req)
     .array()
     .map(error => {
@@ -26,6 +25,7 @@ actions.makePayment = (req, res) => {
     });
 
   if (errors.length < 1) {
+    req.body.customer_id = req.decoded.id;
     stripe.charges.create(
       {
         amount: amount,
@@ -37,20 +37,36 @@ actions.makePayment = (req, res) => {
         if (err) {
           return res.status(400).json({
             success: false,
+            lol: false,
             message: err.message
           });
         }
-        res.status(200).json({
-          success: charge.paid,
-          status: charge.status
+        req.body.currency = currency_;
+        //Save the payment record if payment is successful
+        model.charge(req.body, function(err, message) {
+          if (err) {
+            logger.error(err.sqlMessage);
+            return res.status(500).json({
+              success: false,
+              auth: false,
+              message: err.sqlMessage
+            });
+          }
+          res.status(200).json({
+            auth: true,
+            message: "Payment made successfully",
+            success: charge.paid,
+            status: charge.status
+          });
         });
       }
     );
   } else {
-    res.status(500).json({
+    res.status(400).json({
       success: false,
       message: errorMessage
     });
+    logger.error(errorMessage);
   }
 };
 
