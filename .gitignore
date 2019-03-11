@@ -4,3 +4,4 @@
 /cache
 /coverage
 .nyc_output
+*.clinic-doctor
