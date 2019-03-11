@@ -24,8 +24,16 @@ const cache = require("utils/cache");
  *         type: string
  *       price:
  *         type: integer
+ *       discounted_price:
+ *        type:  integer
  *       image:
  *         type: string
+ *       image_2:
+ *        type: string
+ *       thumbnail:
+ *        type: string
+ *      diaply:
+ *        type: integer
  */
 
 /**
@@ -45,7 +53,6 @@ const cache = require("utils/cache");
  */
 router.get("/getProducts", cache, actions.getProducts);
 
-
 /**
  * @swagger
  * /api/v1/product/filterProducts:
@@ -62,7 +69,6 @@ router.get("/getProducts", cache, actions.getProducts);
  *           $ref: '#/definitions/Product'
  */
 router.get("/filterProducts", cache, actions.filterProducts);
-
 
 /**
  * @swagger
@@ -85,7 +91,6 @@ router.get(
   validator.validateSearchTerm,
   actions.searchProducts
 );
-
 
 /**
  * @swagger
@@ -110,7 +115,6 @@ router.get(
  */
 router.get("/getProduct/:product_id([0-9]+)", cache, actions.getProduct);
 
-
 /**
  * @swagger
  * /api/v1/product/inCategory/{category_id}:
@@ -132,8 +136,11 @@ router.get("/getProduct/:product_id([0-9]+)", cache, actions.getProduct);
  *         schema:
  *           $ref: '#/definitions/Product'
  */
-router.get("/inCategory/:category_id([0-9]+)", cache, actions.getProductsCategory);
-
+router.get(
+  "/inCategory/:category_id([0-9]+)",
+  cache,
+  actions.getProductsCategory
+);
 
 /**
  * @swagger
@@ -156,8 +163,11 @@ router.get("/inCategory/:category_id([0-9]+)", cache, actions.getProductsCategor
  *         schema:
  *           $ref: '#/definitions/Product'
  */
-router.get("/inDepartment/:department_id([0-9]+)", cache, actions.getProductsDepartment);
-
+router.get(
+  "/inDepartment/:department_id([0-9]+)",
+  cache,
+  actions.getProductsDepartment
+);
 
 /**
  * @swagger
@@ -182,7 +192,6 @@ router.put(
   validator.validateEditProduct,
   actions.editProduct
 );
-
 
 /**
  * @swagger
@@ -209,7 +218,6 @@ router.delete(
   actions.deleteProduct
 );
 
-
 /**
  * @swagger
  * /api/v1/product/editCategory/{product_id}:
@@ -233,7 +241,6 @@ router.put(
   validator.validateEditCategory,
   actions.editCategory
 );
-
 
 /**
  * @swagger
@@ -260,7 +267,6 @@ router.delete(
   actions.deleteCategory
 );
 
-
 /**
  * @swagger
  * /api/v1/product/editDepartment/{department_id}:
@@ -284,7 +290,6 @@ router.put(
   validator.validateEditCategory,
   actions.editDepartment
 );
-
 
 /**
  * @swagger
