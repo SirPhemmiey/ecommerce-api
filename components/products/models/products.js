@@ -293,6 +293,96 @@ class Products {
       return callback(null, result);
     });
   }
+
+  /**
+   *
+   *
+   * @param {string} name
+   * @param {function} callback
+   * @memberof Products
+   */
+  addAttribute(name, callback) {
+    const params = [name];
+    const query = `INSERT INTO attribute (name) VALUES (?)`;
+
+    //check if the attribute already exist in the database
+    const checkQuery = `SELECT name FROM attribute WHERE name = ?`;
+    sql.query(checkQuery, name, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      } else if (result.length > 0) {
+        //if it finds a matching email address
+        return callback(err, null, false);
+      } else {
+        //perform the insert query
+        const query = `INSERT INTO attribute (name) VALUES (?)`;
+        sql.query(query, params, (err, attribute) => {
+          if (err) {
+            console.log({ err });
+            return callback(err, null);
+          }
+          return callback(null, attribute, true);
+        });
+      }
+    });
+
+  }
+
+  /**
+   *
+   *
+   * @param {number} attr_id
+   * @param {function} callback
+   * @memberof Products
+   */
+  editAttribute(options, callback) {
+    const { name, attribute_id } = options;
+    const params = [name, attribute_id];
+    const query = `UPDATE attribute SET name = ? WHERE attribute_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {number} attr_id
+   * @param {function} callback
+   * @memberof Products
+   */
+  deleteAttribute(attribute_id, callback) {
+    const params = [attribute_id];
+    const query = `DELETE FROM attribute WHERE attribute_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
+
+  /**
+   *
+   *
+   * @param {number} product_id
+   * @param {function} callback
+   * @memberof Products
+   */
+  getProductAttributes(param, callback) {
+    const { product_id, attribute_id } = param;
+    const params = [product_id, attribute_id];
+    const query = `SELECT * FROM product as P JOIN product_attribute as PA ON (P.product_id = PA.product_id) JOIN attribute as A ON (A.attribute_id = PA.attribute_value_id) WHERE P.product_id = ? AND A.attribute_id = ?`;
+    sql.query(query, params, (err, result) => {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, result);
+    });
+  }
 }
 
 module.exports = Products;

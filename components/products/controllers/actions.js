@@ -509,4 +509,154 @@ actions.deleteDepartment = (req, res) => {
   }
 };
 
+//POST request to add an attribute
+actions.addAttribute = (req, res) => {
+  const { name } = req.body;
+  let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
+  if (errors.length < 1) {
+    model.addAttribute(name, (err, attribute, isFound) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          auth: false,
+          message: err.sqlMessage
+        });
+      } else if (!isFound) {
+        return res.status(409).json({
+          success: false,
+          message: "The attribute has been added already. Please check again."
+        });
+      }
+      res.status(201).json({
+        success: true,
+        message: "Attribute added successfully"
+      });
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
+};
+
+//PUT a request to edit attribute information
+actions.editAttribute = (req, res) => {
+  const { name } = req.body;
+  const { attribute_id } = req.params;
+  let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
+  if (errors.length < 1) {
+    const filterParams = {
+      name,
+      attribute_id
+    };
+    model.editAttribute(filterParams, (err, result) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          message: err.sqlMessage
+        });
+      } else if (result.affectedRows > 0) {
+        return res.status(200).json({
+          success: true,
+          message: "Attribute updated successfully"
+        });
+      } else if (result.affectedRows === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "The attribute with the ID you entered cannot be found"
+        });
+      }
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
+};
+
+//DELETE an attribute
+actions.deleteAttribute = (req, res) => {
+  const { attribute_id } = req.params;
+  let errorMessage;
+  const errors = validationResult(req)
+    .array()
+    .map(error => {
+      errorMessage = error.msg;
+    });
+  if (errors.length < 1) {
+    model.deleteAttribute(attribute_id, (err, result) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          message: err.sqlMessage
+        });
+      } else if (result.affectedRows > 0) {
+        return res.status(200).json({
+          success: true,
+          message: "Attribute category deleted successfully"
+        });
+      } else if (result.affectedRows === 0) {
+        return res.status(200).json({
+          success: false,
+          message: "The attribute with the ID you entered cannot be found"
+        });
+      }
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: errorMessage
+    });
+    logger.error(errorMessage);
+  }
+};
+
+//GET product item information/detal
+actions.getProductAttributes = (req, res) => {
+  const { product_id, attribute_id } = req.query;
+  const p_id = parseInt(product_id, 10);
+  const a_id = parseInt(attribute_id, 10);
+  const options = {
+    product_id: p_id,
+    attribute_id: a_id
+  };
+  if (product_id && !isNaN(p_id) && (attribute_id && !isNaN(a_id))) {
+    model.getProductAttributes(options, (err, product) => {
+      if (err) {
+        logger.error(err.sqlMessage);
+        return res.status(500).json({
+          success: false,
+          message: err.sqlMessage
+        });
+      }
+      res.status(200).json({
+        success: true,
+        product
+      });
+    });
+  } else {
+    res.status(500).json({
+      success: false,
+      message: "Attribute and Product ID should be integers"
+    });
+  }
+};
+
 module.exports = actions;

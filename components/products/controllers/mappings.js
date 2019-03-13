@@ -15,7 +15,6 @@ const cache = require("utils/cache");
 
 router.get("/getProducts", cache, actions.getProducts);
 
-
 router.get("/filterProducts", cache, actions.filterProducts);
 
 router.get(
@@ -64,7 +63,7 @@ router.delete(
 
 router.put(
   "/editDepartment/:department_id([0-9]+)",
-  validator.validateEditCategory,
+  validator.validateEditDepartment,
   actions.editDepartment
 );
 
@@ -72,6 +71,30 @@ router.delete(
   "/deleteDepartment/:department_id([0-9]+)",
   validator.validateDeleteDepartment,
   actions.deleteDepartment
+);
+
+router.post(
+  "/addAttribute",
+  validator.validateNewAttribute,
+  actions.addAttribute
+);
+
+router.put(
+  "/editAttribute/:attribute_id",
+  validator.validateEditAttribute,
+  actions.editAttribute
+);
+
+router.delete(
+  "/deleteAttribute/:attribute_id",
+  validator.validateDeleteAttribute,
+  actions.deleteAttribute
+);
+
+router.get(
+  "/getProductAttributes",
+  validator.validateProductAttributes,
+  actions.getProductAttributes
 );
 
 module.exports = router;

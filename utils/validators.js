@@ -87,6 +87,15 @@ export const validateNewDepartment = [
     .escape()
 ];
 
+export const validateNewAttribute = [
+  check("name")
+    .not()
+    .isEmpty()
+    .withMessage("Attribute name cannot be empty")
+    .trim()
+    .escape()
+];
+
 export const validateNewProduct = [
   check("name")
     .not()
@@ -248,10 +257,33 @@ export const validateEditDepartment = [
     .withMessage("Descrition must be a string")
 ];
 
+export const validateEditAttribute = [
+  check("name")
+    .isString()
+    .withMessage("Name must be a string")
+];
+
 export const validateDeleteDepartment = [
   check("department_id")
   .isNumeric()
   .withMessage("Product department ID must be an integer")
+];
+
+
+export const validateProductAttributes = [
+  check("attribute_id")
+  .isNumeric()
+  .withMessage("Attribute ID must be an integer"),
+
+  check("product_id")
+  .isNumeric()
+  .withMessage("Product ID must be an integer")
+];
+
+export const validateDeleteAttribute = [
+  check("attribute_id")
+  .isNumeric()
+  .withMessage("Attribute ID must be an integer")
 ];
 
 export const validateEditCategory = [
