@@ -1,1 +1,1 @@
-after_success: yarn run coverage
+after_success: yarn run test
