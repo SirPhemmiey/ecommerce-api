@@ -9,7 +9,6 @@ const helmet = require("helmet");
 const express = require("express");
 const morgan = require("morgan");
 const expressValidator = require("express-validator");
-const healthcheck = require("maikai");
 const cors = require("cors");
 const methodOverride = require("method-override");
 const { productionErrors, developmentErrors } = require("./utils/handlers");
@@ -19,7 +18,7 @@ const logger = require("./config/winston");
 const compression = require("compression");
 const nodemailer = require("nodemailer");
 const latencyHeaders = require('express-latency-headers')
-const rateLimit = require("express-rate-limit"); //Pacakage to limit repeated requests to public APIs and/or endpoints.
+const rateLimit = require("express-rate-limit"); //Package to limit repeated requests to public APIs and/or endpoints.
 const hpkp = require("hpkp");
 const ninetyDaysInSeconds = 7776000;
 
@@ -80,14 +79,11 @@ function mainAppServices(app) {
     next();
   });
 
-  app.use(express.static('dist'));
-
   app.use(compression()); //Compress all responses
   app.use(responseTime()); //Create a middleware that adds a X-Response-Time header to responses.
   app.use(cors());
   app.use(express.json({}));
   app.use(express.urlencoded({ extended: true }));
-  app.use(express.static(path.join(__dirname, 'public')));
   app.use(expressValidator()); //Expose a bunch of validation methods
   app.use(methodOverride());
   app.use(morgan("combined", { stream: logger.stream }));
