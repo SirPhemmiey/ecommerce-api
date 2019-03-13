@@ -87,19 +87,6 @@ export const validateNewDepartment = [
     .escape()
 ];
 
-export const validateNewOrder = [
-  check("total_amount")
-    .not()
-    .isEmpty()
-    .withMessage("Total amount cannot be empty")
-    .isDecimal()
-    .withMessage("Total amount must be a decimal"),
-
-  check("status")
-    .isInt()
-    .withMessage("Status must be an Integer")
-];
-
 export const validateNewProduct = [
   check("name")
     .not()
@@ -122,6 +109,20 @@ export const validateNewProduct = [
   check("display")
     .isInt()
     .withMessage("Display must be an Integer")
+];
+
+export const validateNewOrder = [
+  check("total_amount")
+    .not()
+    .isEmpty()
+    .isNumeric()
+    .withMessage("Total amount should be numeric"),
+
+    check("shipping_id")
+    .not()
+    .isEmpty()
+    .isNumeric()
+    .withMessage("Shipping ID should be numeric")
 ];
 
 export const validateNewShippingRegion = [
@@ -197,13 +198,6 @@ export const validateNewItem = [
     .not()
     .isEmpty()
     .withMessage("`Buy now` field is required")
-
-  // check("added_on")
-  // .isISO8601()
-  // .withMessage("`Added on` must be a date")
-  // .not()
-  // .isEmpty()
-  // .withMessage("`Added on` must be an integer")
 ];
 
 export const validateNewPayment = [
@@ -278,6 +272,12 @@ export const validateDeleteProduct = [
   check("product_id")
   .isNumeric()
   .withMessage("Product ID must be an integer")
+];
+
+export const validateCancelOrder = [
+  check("order_id")
+  .isNumeric()
+  .withMessage("Order ID must be an integer")
 ];
 
 export const validateDeleteCategory = [

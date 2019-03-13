@@ -89,8 +89,7 @@ actions.getProduct = (req, res) => {
 
 //GET products based on the selected department and category, and paginate the result
 actions.filterProducts = (req, res) => {
-  const { department_id, category_id } = req.body;
-  const { limit, page } = req.query;
+  const { limit, page, department_id, category_id } = req.query;
   const { _limit, offset } = paginate(page, limit);
   const pageOptions = {
     department_id,

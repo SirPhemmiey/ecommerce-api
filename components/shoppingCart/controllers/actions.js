@@ -22,6 +22,7 @@ actions.addToCart = (req, res) => {
       errorMessage = error.msg;
     });
 
+    req.body.added_on = new Date();
   if (errors.length < 1) {
     model.addToCart(req.body, function(err, result) {
       if (err) {

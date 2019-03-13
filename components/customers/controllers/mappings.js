@@ -18,7 +18,9 @@ router.post(
   validator.validateNewCustomer,
   actions.registerCustomer
 );
+
 router.post("/login", validator.validateLogin, actions.login);
+
 router.put(
   "/updateProfile",
   validator.validateUpdateProfile,
