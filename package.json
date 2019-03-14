@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "nodemon --exec babel-node server.js",
-    "test": "cross-env NODE_ENV=test nyc mocha tests/index.js --opts tests/mocha.opts",
+    "test": "cross-env NODE_ENV=test nyc mocha test/*.js --opts test/mocha.opts",
     "clinic": "clinic doctor -- node server.js"
   },
   "dependencies": {

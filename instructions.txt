@@ -1,0 +1,3 @@
+1. Import the MySQL database via the MySQL console or phpMyAdmin. After Importing you can name it "ecommerce" or anything you want. 
+
+2. Put your database details (host, username, password, port) in the config/index folder so that it can be used for running the application.

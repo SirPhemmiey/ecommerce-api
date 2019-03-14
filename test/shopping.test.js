@@ -11,6 +11,26 @@ const { expect } = require("chai");
 
 describe("Shopping Cart", () => {
 
+  var token = null;
+  beforeEach(
+    "This gets the auth token and runs before the test below",
+    done => {
+      const loginData = {
+        email: "test@gmail.com",
+        password: "123"
+      };
+      request(app)
+        .post("/api/v1/customer/token_")
+        .send(loginData)
+        .end((err, res) => {
+          if (err) return done(err);
+          token = res.body.token;
+          expect(res.body.token).to.be.not.empty;
+          return done();
+        });
+    }
+  );
+
   //POST an item to the shopping cart
   describe("POST Product Item", () => {
     it("Should add an item to the cart", done => {
@@ -20,10 +40,11 @@ describe("Shopping Cart", () => {
         attributes: "This product is nice",
         quantity: 2,
         buy_now: 1,
-        added_on: new Date()
+        added_on: new Date("YYYY-mm-dd H:i:s")
       };
       request(app)
         .post("/api/v1/shoppingcart/addToCart")
+        .set("Authorization", "Bearer " + token)
         .send(cartData)
         .expect(201)
         .end((err, res) => {

@@ -16,7 +16,10 @@ yarn
 
 3. Go to `config/index.js` to add your database details in `dbConfig` object.
 
- 4. Test endpoints with postman, get api docs here: https://documenter.getpostman.com/view/3683187/S17jXCh5
+## Running the Application
+- To run the application, run `yarn start`
+
+ 4. To test the endpoints, get api docs here: https://documenter.getpostman.com/view/3683187/S17jXCh5
 
 ## Features
 Below are the features of ecommerce API.
