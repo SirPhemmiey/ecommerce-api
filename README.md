@@ -42,9 +42,6 @@ Admins can add/remove/edit attributes for a product <br />
 
 Modern JavaScript technologies were adopted for this project
 
-ES2015: Also known as ES6 or ES2015 or ECMASCRIPT 6, is a new and widely used version of Javascript
-that makes it compete healthily with other languages.
-
 NodeJS: Node.js is an open-source, cross-platform JavaScript run-time for writing javascript server side applications.
 
 ExressJS: This is the web application framework for Node.js
