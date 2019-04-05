@@ -113,7 +113,7 @@ mainAppServices(app);
 //   service: "Gmail",
 //   auth: {
 //     user: "oluwafemiakinde@gmail.com",
-//     pass: "Algorithm212"
+//     pass: "***"
 //   }
 // });
 // const transport = nodemailer.createTransport("smtps://oluwafemiakinde@gmail.com:"+encodeURIComponent("Algorithm") + "@smtp.gmail.com:465");

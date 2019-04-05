@@ -31,7 +31,7 @@ actions.makePayment = (req, res) => {
         amount: amount,
         currency: currency_,
         source: "tok_mastercard", // obtained with Stripe.js
-        description: "Charge for jenny.rosen@example.com"
+        description: "Charge for ECommerce API"
       },
       function(err, charge) {
         if (err) {
